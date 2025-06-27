@@ -1,12 +1,14 @@
 {
+    "editor.rulers": [
+        79
+    ],
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
     "python.testing.pytestArgs": [
         "."
     ],
     "python.testing.autoTestDiscoverOnSaveEnabled": true,
-    //Cria uma lmarcação no vscode para indicar o limite padrão de codigos por linhas no python
-    "editor.rulers": [
-        79
-    ],
+    // Ruff: novo servidor nativo
+    "ruff.enable": true,
+    //"ruff.server.path": "native"
 }
