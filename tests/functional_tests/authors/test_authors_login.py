@@ -87,7 +87,7 @@ class AuthorsLoginTest(AuthorsBaseTest):
 
         # Envia o formulário
         form.submit()
-
+        self.sleep(1)
         # Vê uma mensagem de erro na tela
         self.assertIn(
             'Invalid credentials',

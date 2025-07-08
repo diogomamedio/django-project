@@ -17,8 +17,8 @@ class RecipeCategoryViewTest(RecipeTestBase):
         # Uso o reverso para inserir o argumento category_id ao invés de hardcoded # noqa: E501
         view = resolve(reverse('recipes:category', kwargs={
             'category_id': 1000})
-            )
-        self.assertIs(view.func, views.category)
+        )
+        self.assertIs(view.func.view_class, views.RecipeListViewCategory)
 
     def test_recipe_category_view_returns_404_if_no_recipes_found(self):
         # Teste de 404 quando não há recipes com o category_id especificado
@@ -32,6 +32,6 @@ class RecipeCategoryViewTest(RecipeTestBase):
         recipe = self.make_recipe(is_published=False)
         response = self.client.get(reverse(
             'recipes:recipe', kwargs={
-                'id': recipe.category.id})
+                'pk': recipe.category.id})
         )
         self.assertEqual(response.status_code, 404)

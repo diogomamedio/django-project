@@ -93,7 +93,7 @@ class AuthorsRegisterTest(AuthorsBaseTest):
             form, 'Repeat your password').send_keys('P@ssw0rd1')
 
         form.submit()
-
+        self.sleep(1)
         self.assertIn(
             'Your user is created, please log in.',
             self.browser.find_element(By.TAG_NAME, 'body').text
