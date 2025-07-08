@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'INSECURE_KEY')
 DEBUG = True if os.environ.get('DEBUG') == 'True' else False
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = ['*']
 
 
 # Application definition
