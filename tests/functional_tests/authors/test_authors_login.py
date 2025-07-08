@@ -28,7 +28,7 @@ class AuthorsLoginTest(AuthorsBaseTest):
 
         # Usuário envia o formulário
         form.submit()
-
+        self.sleep(1)
         # Usuário vê a mensagem de login com sucesso e seu nome
         self.assertIn(
             f'Your are logged in with {user.username}.',
@@ -63,7 +63,7 @@ class AuthorsLoginTest(AuthorsBaseTest):
 
         # Envia o formulário
         form.submit()
-
+        self.sleep(1)
         # Vê uma mensagem de erro na tela
         self.assertIn(
             'Invalid username or password',
