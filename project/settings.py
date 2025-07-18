@@ -24,6 +24,7 @@ ALLOWED_HOSTS: list[str] = ['*']
 INSTALLED_APPS = [
     'recipes',
     'authors',
+    'tag',
     "debug_toolbar",
     'django.contrib.admin',
     'django.contrib.auth',
