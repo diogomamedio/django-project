@@ -8,13 +8,13 @@ class RecipeModelTest(RecipeTestBase):
         self.recipe = self.make_recipe()
         return super().setUp()
 
-    def make_recipe_no_defaults(self):
+    def make_recipe_no_defaults(self, title='Recipe Title', slug='recipe-slug-for-no-defaults'):
         recipe = Recipe(
             category=self.make_category(name='Test Default Category'),
             author=self.make_author(username='newuser'),
-            title='Recipe Title',
+            title=title,
             description='Recipe Description',
-            slug='recipe-slug-for-no-defaults',
+            slug=slug,
             preparation_time=10,
             preparation_time_unit='Minutos',
             servings=5,
@@ -38,14 +38,16 @@ class RecipeModelTest(RecipeTestBase):
             self.recipe.full_clean()
 
     def test_recipe_preparation_steps_is_html_is_false_by_default(self):
-        recipe = self.make_recipe_no_defaults()
+        recipe = self.make_recipe_no_defaults(
+            title='Different', slug='different-slug')
         self.assertFalse(
             recipe.preparation_steps_is_html,
             msg='Recipe preparation_steps_is_html is not False',
         )
 
     def test_recipe_is_published_is_false_by_default(self):
-        recipe = self.make_recipe_no_defaults()
+        recipe = self.make_recipe_no_defaults(
+            title='Different', slug='different-slug')
         self.assertFalse(
             recipe.is_published,
             msg='Recipe is_published is not False',
@@ -59,5 +61,5 @@ class RecipeModelTest(RecipeTestBase):
         self.assertEqual(
             str(self.recipe), needed,
             msg=f'Recipe string representation must be '
-                f'"{needed}" but "{str(self.recipe)}" was received.'
+            f'"{needed}" but "{str(self.recipe)}" was received.'
         )

@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from recipes import views
+from recipes.views import site
 from .test_recipe_base import RecipeTestBase
 
 
@@ -10,7 +10,6 @@ class RecipeCategoryViewTest(RecipeTestBase):
         self.make_recipe(title=needed_title)
         response = self.client.get(reverse('recipes:category', args=(1,)))
         content = response.content.decode('utf-8')
-
         self.assertIn(needed_title, content)
 
     def test_recipe_category_view_function_is_correct(self):
@@ -18,7 +17,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
         view = resolve(reverse('recipes:category', kwargs={
             'category_id': 1000})
         )
-        self.assertIs(view.func.view_class, views.RecipeListViewCategory)
+        self.assertIs(view.func.view_class, site.RecipeListViewCategory)
 
     def test_recipe_category_view_returns_404_if_no_recipes_found(self):
         # Teste de 404 quando não há recipes com o category_id especificado

@@ -8,22 +8,27 @@ from recipes.models import Recipe
 
 def delete_cover(instance):
     try:
-        print(instance.cover, instance.cover.path)
         os.remove(instance.cover.path)
-    except (ValueError, FileNotFoundError) as e:
-        print(e)
+    except (ValueError, FileNotFoundError):
+        ...
 
 
 @receiver(pre_delete, sender=Recipe)
 def recipe_cover_delete(sender, instance, *args, **kwargs):
     old_instance = Recipe.objects.filter(pk=instance.pk).first()
-    delete_cover(old_instance)
+
+    if old_instance:
+        delete_cover(old_instance)
 
 
 @receiver(pre_save, sender=Recipe)
 def recipe_cover_update(sender, instance, *args, **kwargs):
     old_instance = Recipe.objects.filter(pk=instance.pk).first()
+
+    if not old_instance:
+        return
+
     is_new_cover = old_instance.cover != instance.cover
 
     if is_new_cover:
-        delete_cover(old_instance)  # Delete the old cover if it exists
+        delete_cover(old_instance)

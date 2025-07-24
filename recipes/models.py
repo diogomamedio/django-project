@@ -1,14 +1,17 @@
+import os
 from collections import defaultdict
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F, Value
+from django.db.models.functions import Concat
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify
-from tag.models import Tag
-from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-import os
 from PIL import Image
+from tag.models import Tag
 
 
 class Category(models.Model):
@@ -18,7 +21,24 @@ class Category(models.Model):
         return self.name
 
 
+class RecipeManager(models.Manager):
+    def get_published(self):
+        return self.filter(
+            is_published=True
+        ).annotate(
+            author_full_name=Concat(
+                F('author__first_name'), Value(' '),
+                F('author__last_name'), Value(' ('),
+                F('author__username'), Value(')'),
+            )
+        ) \
+            .order_by('-id') \
+            .select_related('category', 'author') \
+            .prefetch_related('tags')
+
+
 class Recipe(models.Model):
+    objects = RecipeManager()
     title = models.CharField(max_length=65, verbose_name=_('Title'))
     description = models.CharField(max_length=165)
     slug = models.SlugField(unique=True)
