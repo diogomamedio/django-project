@@ -1,6 +1,4 @@
-from collections import defaultdict
-
-from attr import attr
+from authors.validators import AuthorRecipeValidator
 from rest_framework import serializers
 from tag.models import Tag
 
@@ -20,6 +18,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'author',
             'category', 'tags', 'public', 'preparation',
             'tag_objects', 'tag_links',
+            'preparation_time', 'preparation_time_unit', 'servings',
+            'servings_unit',
+            'preparation_steps', 'cover'
         ]
 
     public = serializers.BooleanField(
@@ -48,25 +49,24 @@ class RecipeSerializer(serializers.ModelSerializer):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
 
     def validate(self, attrs):
+        if self.instance is not None and attrs.get('servings') is None:
+            attrs['servings'] = self.instance.servings
+
+        if self.instance is not None and attrs.get('preparation_time') is None:
+            attrs['preparation_time'] = self.instance.preparation_time
+
         super_validate = super().validate(attrs)
-
-        title = attrs.get('title')
-        description = attrs.get('description')
-
-        if title == description:
-            raise serializers.ValidationError(
-                {
-                    "title": ["Posso", "ter", "mais de um erro"],
-                    "description": ["Posso", "ter", "mais de um erro"],
-                }
-            )
-
+        AuthorRecipeValidator(
+            data=attrs,
+            ErrorClass=serializers.ValidationError,
+        )
         return super_validate
 
-    def validate_title(self, value):
-        title = value
+    def save(self, **kwargs):
+        return super().save(**kwargs)
 
-        if len(title) < 5:
-            raise serializers.ValidationError('Must have at least 5 chars.')
+    def create(self, validated_data):
+        return super().create(validated_data)
 
-        return title
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)

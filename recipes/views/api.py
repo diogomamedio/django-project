@@ -1,45 +1,45 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
 from tag.models import Tag
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 from ..models import Recipe
 from ..serializers import RecipeSerializer, TagSerializer
 
 
-@api_view(http_method_names=['get', 'post'])
-def recipe_api_list(request):
-    if request.method == 'GET':
-        recipes = Recipe.objects.get_published()[:10]
+class RecipeAPIv2Pagination(PageNumberPagination):
+    page_size = 3
+
+
+class RecipeAPIv2ViewSet(ModelViewSet):
+    queryset = Recipe.objects.get_published()
+    serializer_class = RecipeSerializer
+    pagination_class = RecipeAPIv2Pagination
+    permission_classes = [IsAuthenticated,]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        print('Parametros', self.kwargs)
+        return qs
+
+    def partial_update(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        recipe = self.get_queryset().filter(pk=pk).first()
         serializer = RecipeSerializer(
-            instance=recipes,
-            many=True,
+            instance=recipe,
+            data=request.data,
+            many=False,
             context={'request': request},
+            partial=True,
         )
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = RecipeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # serializer.save()
+        serializer.save()
         return Response(
-            serializer.validated_data,
-            status=status.HTTP_201_CREATED
+            serializer.data,
         )
-
-
-@api_view()
-def recipe_api_detail(request, pk):
-    recipe = get_object_or_404(
-        Recipe.objects.get_published(),
-        pk=pk
-    )
-    serializer = RecipeSerializer(
-        instance=recipe,
-        many=False,
-        context={'request': request},
-    )
-    return Response(serializer.data)
 
 
 @api_view()
