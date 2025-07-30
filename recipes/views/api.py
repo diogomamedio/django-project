@@ -13,7 +13,7 @@ from ..serializers import RecipeSerializer, TagSerializer
 
 
 class RecipeAPIv2Pagination(PageNumberPagination):
-    page_size = 2
+    page_size = 20
 
 
 class RecipeAPIv2ViewSet(ModelViewSet):

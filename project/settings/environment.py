@@ -20,6 +20,11 @@ ALLOWED_HOSTS: list[str] = parse_comma_sep_str_to_list(
 CSRF_TRUSTED_ORIGINS: list[str] = parse_comma_sep_str_to_list(
     get_env_variable('CSRF_TRUSTED_ORIGINS')
 )
+CORS_ALLOWED_ORIGINS: list[str] = parse_comma_sep_str_to_list(
+    get_env_variable('CORS_ALLOWED_ORIGINS')
+)
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'project.urls'
 

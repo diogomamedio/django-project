@@ -127,3 +127,9 @@ _local_settings.py
 gunicorn-error-log
 db.sqlite3
 static/
+
+# Next and node modules
+frontend-react/node_modules/*
+frontend-react/.next/*
+
+
