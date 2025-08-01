@@ -29,11 +29,6 @@ class RecipeAPIv2ViewSet(ModelViewSet):
     def get_serializer(self, *args, **kwargs):
         return super().get_serializer(*args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["example"] = 'this is in context now'
-        return context
-
     def get_queryset(self):
         qs = super().get_queryset()
 
@@ -62,8 +57,8 @@ class RecipeAPIv2ViewSet(ModelViewSet):
         return super().get_permissions()
 
     def list(self, request, *args, **kwargs):
-        print('REQUEST', request.user)
-        print(request.user.is_authenticated)
+        # print('REQUEST', request.user)
+        # print(request.user.is_authenticated)
         return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
